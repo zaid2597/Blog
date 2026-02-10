@@ -2,12 +2,17 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
   const menuRef = useRef(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const toggleMobileMenu = () => {
     if (isMobileMenuOpen) {
@@ -36,6 +41,25 @@ const Navbar = () => {
     setOpenDropdown(openDropdown === menu ? null : menu);
   };
 
+  const toggleSearch = () => {
+    setIsSearchOpen((prev) => !prev);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const query = searchValue.trim();
+    if (query) {
+      router.push(`/?q=${encodeURIComponent(query)}`);
+    } else {
+      router.push('/');
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchValue('');
+    router.push('/');
+  };
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -52,6 +76,14 @@ const Navbar = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const query = searchParams.get('q') || '';
+    setSearchValue(query);
+    if (query) {
+      setIsSearchOpen(true);
+    }
+  }, [searchParams]);
 
   // Close menu on escape key press
   useEffect(() => {
@@ -74,7 +106,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="text-2xl font-black tracking-tight uppercase hover:opacity-80 transition-opacity duration-300">
-              KICKER
+              DAILY DRIFT
             </Link>
           </div>
 
@@ -82,6 +114,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {/* Search Icon */}
             <button 
+              onClick={toggleSearch}
               className="p-2 hover:opacity-60 transition-opacity duration-300"
               aria-label="Search"
             >
@@ -119,6 +152,37 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {isSearchOpen && (
+        <div className="border-t border-black bg-white">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap gap-3 items-center"
+          >
+            <input
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.target.value)}
+              placeholder="Search by title or author"
+              className="flex-1 min-w-[200px] border border-black px-4 py-2 text-sm focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="bg-black text-white px-4 py-2 text-sm font-semibold uppercase tracking-wider hover:bg-red-600 transition-colors"
+            >
+              Search
+            </button>
+            {searchValue ? (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
+              >
+                Clear
+              </button>
+            ) : null}
+          </form>
+        </div>
+      )}
 
       {/* Full Screen Dropdown Menu with Smooth Transition */}
       {(isMobileMenuOpen || isClosing) && (

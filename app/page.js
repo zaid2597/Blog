@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <Navbar />
       <HeroSection />
-      <ContentSections /> 
+      {/* <ContentSections />  */}
       <Footer />
     </>
   );

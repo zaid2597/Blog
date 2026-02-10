@@ -3,74 +3,143 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { getPostBySlug, getRelatedPosts } from '../../../data/posts';
+
+const VIEW_STORAGE_KEY = 'adminViews';
+const VIEW_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
+
+const slugify = (value) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
+const buildAdminContent = ({ title, description, excerpt, author, category }) => `
+  <p>${description || title} explores the latest ideas in ${category}.</p>
+  ${excerpt ? `<blockquote>${excerpt}</blockquote>` : ''}
+  <p>Written by ${author}, this story was created from the admin dashboard.</p>
+`;
+
+const normalizeAdminPost = (post) => {
+  const title = post?.title || 'Untitled Card';
+  const category = post?.category || 'General';
+  const author = post?.author || 'Editorial Team';
+  const rawTags = Array.isArray(post?.tags)
+    ? post.tags
+    : (post?.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean);
+
+  return {
+    ...post,
+    title,
+    category,
+    categorySlug: post?.categorySlug || slugify(category),
+    author,
+    authorSlug: post?.authorSlug || slugify(author),
+    authorImage: post?.authorImage,
+    date: post?.date || '01 Jan 2020',
+    comments: Number(post?.comments || 0),
+    tags: rawTags.length > 0 ? rawTags : ['Design', 'Technology'],
+    content:
+      post?.content ||
+      buildAdminContent({
+        title,
+        description: post?.description,
+        excerpt: post?.excerpt,
+        author,
+        category
+      })
+  };
+};
 
 export default function BlogPost() {
   const params = useParams();
   const slug = params?.slug;
+  const viewLoggedRef = useRef(null);
+  const [heroImageFailed, setHeroImageFailed] = useState(false);
+  const [authorImageFailed, setAuthorImageFailed] = useState(false);
+  const [post, setPost] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState([]);
+  const [isResolving, setIsResolving] = useState(true);
+  const fallbackImage = '/images/post-fallback.svg';
+  const authorFallbackImage =
+    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80';
 
-  // Sample blog post data - in a real app, this would come from an API or database
-  const post = {
-    title: "This Is What Design Has Come To",
-    category: "Application",
-    categorySlug: "application",
-    author: "Sandra Jones",
-    authorSlug: "sandra-jones",
-    authorImage: "https://source.unsplash.com/200x200/?portrait,woman",
-    date: "20 Jan 2020",
-    comments: 0,
-    image: "https://source.unsplash.com/1400x900/?digital,art",
-    content: `
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      
-      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-      
-      <h2>The Evolution of NFT Design</h2>
-      
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-      
-      <blockquote>
-        "The future of digital art is not just about technology, but about how we connect with creativity in new and meaningful ways."
-      </blockquote>
-      
-      <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-      
-      <h3>Key Takeaways</h3>
-      
-      <ul>
-        <li>NFT design is evolving rapidly with new technologies</li>
-        <li>Artists are exploring unique creative possibilities</li>
-        <li>The market continues to grow and mature</li>
-        <li>Community engagement is becoming increasingly important</li>
-      </ul>
-      
-      <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-    `,
-    tags: ['NFT', 'Design', 'Digital Art', 'Technology']
-  };
-
-  const relatedPosts = [
-    {
-      id: 1,
-      title: "New Digital NFT Digest 2022",
-      category: "Application",
-      image: "https://source.unsplash.com/1000x700/?creative,design",
-      slug: "new-digital-nft-digest-2022"
-    },
-    {
-      id: 2,
-      title: "Must-haves in Your NFT Collection",
-      category: "Application",
-      image: "https://source.unsplash.com/1000x700/?nft,art",
-      slug: "must-haves-in-your-nft-collection"
-    },
-    {
-      id: 3,
-      title: "The Phenomenon of NFT Rates",
-      category: "Featured",
-      image: "https://source.unsplash.com/1000x700/?abstract,pattern",
-      slug: "phenomenon-of-nft-rates"
+  useEffect(() => {
+    setIsResolving(true);
+    const staticPost = getPostBySlug(slug);
+    if (staticPost) {
+      setPost(staticPost);
+      setRelatedPosts(getRelatedPosts(staticPost));
+      setIsResolving(false);
+      return;
     }
-  ];
+
+    if (typeof window !== 'undefined' && slug) {
+      const stored = JSON.parse(localStorage.getItem('adminPosts') || '[]');
+      const match = stored.find((item) => item.slug === slug);
+      if (match) {
+        const normalized = normalizeAdminPost(match);
+        setPost(normalized);
+        setRelatedPosts(getRelatedPosts(normalized));
+        setIsResolving(false);
+        return;
+      }
+    }
+
+    setPost(null);
+    setRelatedPosts([]);
+    setIsResolving(false);
+  }, [slug]);
+
+  useEffect(() => {
+    if (!post || !slug || typeof window === 'undefined') return;
+    if (viewLoggedRef.current === slug) return;
+
+    const now = Date.now();
+    const raw = localStorage.getItem(VIEW_STORAGE_KEY);
+    const entries = raw ? JSON.parse(raw) : [];
+    const pruned = entries.filter((entry) => entry?.at >= now - VIEW_RETENTION_MS);
+    pruned.push({ slug, at: now });
+    localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify(pruned));
+    viewLoggedRef.current = slug;
+  }, [post, slug]);
+
+  const heroImageSrc = heroImageFailed || !post?.image ? fallbackImage : post.image;
+  const authorImageSrc =
+    authorImageFailed || !post?.authorImage ? authorFallbackImage : post.authorImage;
+
+  if (isResolving) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <p className="text-gray-500">Loading post...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Post not found
+          </h1>
+          <p className="text-gray-500 mb-8">
+            The article you are looking for does not exist or was moved.
+          </p>
+          <Link
+            href="/"
+            className="inline-block bg-gray-900 text-white px-6 py-3 font-semibold uppercase tracking-wider hover:bg-red-600 transition-colors rounded"
+          >
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -103,10 +172,12 @@ export default function BlogPost() {
           <Link href={`/author/${post.authorSlug}`} className="flex items-center gap-3 group">
             <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200">
               <Image
-                src={post.authorImage}
+                src={authorImageSrc}
                 alt={post.author}
                 fill
                 className="object-cover"
+                onError={() => setAuthorImageFailed(true)}
+                sizes="48px"
               />
             </div>
             <div>
@@ -136,16 +207,18 @@ export default function BlogPost() {
         {/* Featured Image */}
         <div className="relative h-[500px] mb-12 overflow-hidden bg-gray-900">
           <Image
-            src={post.image}
+            src={heroImageSrc}
             alt={post.title}
             fill
             className="object-cover"
+            onError={() => setHeroImageFailed(true)}
+            sizes="(min-width: 1024px) 896px, 100vw"
           />
         </div>
 
         {/* Post Content */}
         <article 
-          className="prose prose-lg max-w-none mb-12"
+          className="prose prose-lg max-w-none mb-12 text-gray-800 prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900 prose-blockquote:text-gray-700"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
@@ -168,10 +241,12 @@ export default function BlogPost() {
           <div className="flex gap-6">
             <div className="relative w-24 h-24 flex-shrink-0 rounded-full overflow-hidden bg-gray-200">
               <Image
-                src={post.authorImage}
+                src={authorImageSrc}
                 alt={post.author}
                 fill
                 className="object-cover"
+                onError={() => setAuthorImageFailed(true)}
+                sizes="96px"
               />
             </div>
             <div className="flex-1">
@@ -252,20 +327,20 @@ export default function BlogPost() {
                 <input
                   type="text"
                   placeholder="Your Name *"
-                  className="px-4 py-3 border border-gray-300 focus:outline-none focus:border-red-600"
+                  className="px-4 py-3 border border-gray-300 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-red-600"
                   required
                 />
                 <input
                   type="email"
                   placeholder="Your Email *"
-                  className="px-4 py-3 border border-gray-300 focus:outline-none focus:border-red-600"
+                  className="px-4 py-3 border border-gray-300 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-red-600"
                   required
                 />
               </div>
               <textarea
                 rows={6}
                 placeholder="Your Comment *"
-                className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:border-red-600"
+                className="w-full px-4 py-3 border border-gray-300 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-red-600"
                 required
               />
               <button
