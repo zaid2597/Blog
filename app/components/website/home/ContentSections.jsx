@@ -256,8 +256,8 @@ export default function BlogPost() {
                 </Link>
               </h3>
               <p className="text-gray-600 mb-4">
-                A passionate writer and NFT enthusiast who explores the intersection of art, technology, and digital ownership. 
-                With years of experience in the creative industry, Sandra brings unique insights to the world of NFTs.
+                A passionate home decor writer who explores how color, texture, and layout shape everyday living spaces.
+                With years of experience in interior styling, Sandra shares practical ideas that make rooms feel warm and livable.
               </p>
               <div className="flex gap-3">
                 <a href="#" className="text-gray-500 hover:text-red-600 transition-colors">

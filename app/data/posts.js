@@ -1,29 +1,29 @@
 const defaultAuthor = {
   name: "Ayesha Ali",
   slug: "ayesha-ali",
-  image: "https://source.unsplash.com/200x200/?portrait,woman"
+  image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80"
 };
 
 const authorProfiles = {
   "Ayesha Ali": {
     slug: "ayesha-ali",
-    image: "https://source.unsplash.com/200x200/?portrait,woman"
+    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80"
   },
   "Sandra Jones": {
     slug: "sandra-jones",
-    image: "https://source.unsplash.com/200x200/?portrait,woman"
+    image: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=200&h=200&fit=crop&q=80"
   },
   "Kylie Jones": {
     slug: "kylie-jones",
-    image: "https://source.unsplash.com/200x200/?portrait,woman"
+    image: "https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?w=200&h=200&fit=crop&q=80"
   },
   "Diana Lewis": {
     slug: "diana-lewis",
-    image: "https://source.unsplash.com/200x200/?portrait,woman"
+    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80"
   },
   "Umar Aziz": {
     slug: "umar-aziz",
-    image: "https://source.unsplash.com/200x200/?portrait,man"
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&q=80"
   }
 };
 
@@ -35,7 +35,7 @@ const slugify = (value) =>
     .replace(/(^-|-$)/g, "");
 
 const buildTags = (category) => {
-  const base = ["NFT", "Design", "Digital Art", "Technology"];
+  const base = ["Home Decor", "Interior Design", "Styling", "DIY"];
   if (!category) {
     return base;
   }
@@ -46,28 +46,28 @@ const buildTags = (category) => {
 };
 
 const buildContent = ({ title, category, author }) => `
-  <p>${title} is a deep dive into how ${category} stories are shaping the way we build, collect, and share digital experiences. This piece focuses on the patterns that keep audiences engaged and returning for more.</p>
+  <p>${title} focuses on practical ${category.toLowerCase()} ideas that make a home feel layered, calm, and intentional. You will learn how to use light, texture, and layout to create a space that works beautifully every day.</p>
 
-  <p>We explore the latest shifts, practical workflows, and the creative choices that stand out in a fast-moving space. The goal is to help creators and readers understand what works and why.</p>
+  <p>We cover easy upgrades, smart styling tricks, and the simple decisions that lift a room without overwhelming it. The goal is to help you build a home that feels personal, warm, and easy to maintain.</p>
 
-  <h2>Inside the Craft</h2>
+  <h2>Design Approach</h2>
 
-  <p>From concept to execution, the core ideas are consistent: clarity, consistency, and a strong point of view. These pillars show up across the best projects and inspire more confident decisions.</p>
+  <p>Start with a clear palette, then add contrast with textiles, wood tones, and a touch of metal. The best spaces balance comfort with clarity, so every piece feels like it belongs.</p>
 
   <blockquote>
-    "Great work is built on small, repeatable choices that compound over time."
+    "Great rooms are built from small, thoughtful choices that add up over time."
   </blockquote>
 
   <h3>Key Takeaways</h3>
 
   <ul>
-    <li>Use a clear structure to guide readers through the story.</li>
-    <li>Let visuals reinforce the main theme and tone.</li>
-    <li>Keep the narrative focused on one strong idea.</li>
-    <li>End with a specific, actionable insight.</li>
+    <li>Pick one hero element and let it lead the rest of the room.</li>
+    <li>Layer lighting for both mood and task use.</li>
+    <li>Mix materials to avoid a flat, one-note look.</li>
+    <li>Finish with styling that reflects real life, not a showroom.</li>
   </ul>
 
-  <p>Written by ${author}, this article reflects on what makes a story memorable and how to apply those insights to your next project.</p>
+  <p>Written by ${author}, this article shares the home decor habits that keep spaces fresh and welcoming.</p>
 `;
 
 const normalizePost = (post) => {
@@ -100,134 +100,134 @@ const normalizePost = (post) => {
 
 export const heroPost = normalizePost({
   id: 1,
-  title: "This Is What Design Has Come To",
-  category: "Application",
-  categorySlug: "application",
+  title: "Warm Minimalist Living Rooms That Feel Cozy",
+  category: "Living Room",
+  categorySlug: "living-room",
   author: "Sandra Jones",
   authorSlug: "sandra-jones",
-  date: "20 Jan 2020",
+  date: "05 Feb 2026",
   comments: 0,
-  image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&h=800&fit=crop&q=80",
-  slug: "this-is-what-design-has-come-to"
+  image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&h=800&fit=crop&q=80",
+  slug: "warm-minimalist-living-rooms"
 });
 
 export const topPosts = [
   normalizePost({
     id: 2,
-    title: "New Digital NFT Digest 2022",
-    category: "Application",
-    categorySlug: "application",
+    title: "5 Statement Lighting Ideas for Small Spaces",
+    category: "Lighting",
+    categorySlug: "lighting",
     author: "Kylie Jones",
     authorSlug: "kylie-jones",
-    date: "25 Mar 2020",
+    date: "02 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&h=800&fit=crop&q=80",
-    slug: "new-digital-nft-digest-2022"
+    image: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200&h=800&fit=crop&q=80",
+    slug: "statement-lighting-ideas"
   }),
   normalizePost({
     id: 3,
-    title: "Must-haves in Your NFT Collection",
-    category: "Application",
-    categorySlug: "application",
+    title: "How to Style Open Shelving Without Clutter",
+    category: "Kitchen",
+    categorySlug: "kitchen",
     author: "Diana Lewis",
     authorSlug: "diana-lewis",
-    date: "28 Mar 2020",
+    date: "30 Jan 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=1200&h=800&fit=crop&q=80",
-    slug: "must-haves-in-your-nft-collection"
+    image: "https://images.unsplash.com/photo-1501045661006-fcebe0257c3f?w=1200&h=800&fit=crop&q=80",
+    slug: "style-open-shelving"
   })
 ];
 
 export const smallPosts = [
   normalizePost({
     id: 4,
-    title: "Do You Like Your NFTs?",
-    category: "People",
-    categorySlug: "people",
+    title: "Layered Bedding for Hotel-Style Comfort",
+    category: "Bedroom",
+    categorySlug: "bedroom",
     author: "Umar Aziz",
-    date: "18 Feb 2020",
+    date: "26 Jan 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1634973357973-f2ed2657db3c?w=800&h=800&fit=crop&q=80",
-    slug: "do-you-like-your-nfts"
+    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&h=800&fit=crop&q=80",
+    slug: "layered-bedding-comfort"
   }),
   normalizePost({
     id: 5,
-    title: "Realistic Robot Models",
-    category: "People",
-    categorySlug: "people",
+    title: "Earthy Color Palettes That Soothe",
+    category: "Color",
+    categorySlug: "color",
     author: "Ayesha Ali",
-    date: "19 Feb 2020",
+    date: "24 Jan 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=800&fit=crop&q=80",
-    slug: "realistic-robot-models"
+    image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&h=800&fit=crop&q=80",
+    slug: "earthy-color-palettes"
   }),
   normalizePost({
     id: 6,
-    title: "Digital Yin Yang Re-design",
-    category: "People",
-    categorySlug: "people",
+    title: "Entryway Refresh in One Afternoon",
+    category: "Entryway",
+    categorySlug: "entryway",
     author: "Sandra Jones",
-    date: "21 Feb 2020",
+    date: "22 Jan 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1618556450994-a6a128ef0d9d?w=800&h=800&fit=crop&q=80",
-    slug: "digital-yin-yang-re-design"
+    image: "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=800&h=800&fit=crop&q=80",
+    slug: "entryway-refresh"
   }),
   normalizePost({
     id: 7,
-    title: "Your Friends Are Aliens",
-    category: "People",
-    categorySlug: "people",
+    title: "Dining Tablescapes for Everyday Elegance",
+    category: "Dining",
+    categorySlug: "dining",
     author: "Kylie Jones",
-    date: "24 Feb 2020",
+    date: "20 Jan 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=800&h=800&fit=crop&q=80",
-    slug: "your-friends-are-aliens"
+    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=800&fit=crop&q=80",
+    slug: "dining-tablescapes-everyday"
   })
 ];
 
 export const editorChoicePosts = [
   normalizePost({
     id: 8,
-    title: "What Is the Mysterious Process of Creating an NFT?",
-    category: "Blockchain",
-    categorySlug: "blockchain",
-    date: "01 Feb 2020",
+    title: "The Rule of Three for Styling Surfaces",
+    category: "Decor Tips",
+    categorySlug: "decor-tips",
+    date: "28 Jan 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1639762681057-408e52192e55?w=1200&h=900&fit=crop&q=80",
-    slug: "what-is-the-mysterious-process"
+    image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=1200&h=900&fit=crop&q=80",
+    slug: "rule-of-three-styling"
   }),
   normalizePost({
     id: 9,
-    title: "Why Do Authors Refuse to Sell NFTs?",
-    category: "Blockchain",
-    categorySlug: "blockchain",
-    date: "25 Mar 2020",
-    comments: 6,
-    image: "https://images.unsplash.com/photo-1642104704074-907c0698cbd9?w=1200&h=900&fit=crop&q=80",
-    slug: "why-do-authors-refuse"
+    title: "Choosing the Right Sofa Size for Your Room",
+    category: "Furniture",
+    categorySlug: "furniture",
+    date: "27 Jan 2026",
+    comments: 4,
+    image: "https://images.unsplash.com/photo-1505693314127-8b06b8967fcc?w=1200&h=900&fit=crop&q=80",
+    slug: "right-sofa-size"
   })
 ];
 
 export const editorChoiceBottomPosts = [
   normalizePost({
     id: 10,
-    title: "Starting an NFT Project From Scratch: Pros & Cons",
-    category: "Blockchain",
-    categorySlug: "blockchain",
-    date: "26 Mar 2020",
-    comments: 7,
-    image: "https://images.unsplash.com/photo-1644361566696-3d442b5b482a?w=1200&h=900&fit=crop&q=80",
-    slug: "starting-nft-project"
+    title: "High-End Look on a Budget: 7 Quick Wins",
+    category: "Budget Decor",
+    categorySlug: "budget-decor",
+    date: "25 Jan 2026",
+    comments: 3,
+    image: "https://images.unsplash.com/photo-1481277542470-605612bd2d61?w=1200&h=900&fit=crop&q=80",
+    slug: "high-end-look-budget"
   }),
   normalizePost({
     id: 11,
-    title: "Changing Your Design Style while Working on an Item",
-    category: "Blockchain",
-    categorySlug: "blockchain",
-    date: "30 Mar 2020",
+    title: "Mixing Wood Tones Without the Clash",
+    category: "Materials",
+    categorySlug: "materials",
+    date: "23 Jan 2026",
     comments: 2,
-    image: "https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=1200&h=900&fit=crop&q=80",
-    slug: "changing-design-style",
+    image: "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=1200&h=900&fit=crop&q=80",
+    slug: "mixing-wood-tones",
     sponsored: true
   })
 ];
@@ -235,190 +235,190 @@ export const editorChoiceBottomPosts = [
 export const trendingPosts = [
   normalizePost({
     id: 12,
-    title: "The Phenomenon of NFT Rates",
-    category: "Featured",
-    categorySlug: "featured",
+    title: "2026 Home Decor Trends Worth Trying",
+    category: "Trends",
+    categorySlug: "trends",
     author: "Diana Lewis",
     authorSlug: "diana-lewis",
-    date: "28 Mar 2020",
+    date: "10 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=1200&h=900&fit=crop&q=80",
-    slug: "phenomenon-of-nft-rates"
+    image: "https://images.unsplash.com/photo-1487014679447-9f8336841d58?w=1200&h=900&fit=crop&q=80",
+    slug: "2026-home-decor-trends"
   }),
   normalizePost({
     id: 13,
-    title: "The Most Expensive NFT Items of All Times",
-    category: "Featured",
-    categorySlug: "featured",
+    title: "Low-Light Houseplants That Still Thrive",
+    category: "Plants",
+    categorySlug: "plants",
     author: "Umar Aziz",
     authorSlug: "umar-aziz",
-    date: "25 Feb 2020",
+    date: "08 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=1200&h=900&fit=crop&q=80",
-    slug: "most-expensive-nft"
+    image: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=1200&h=900&fit=crop&q=80",
+    slug: "low-light-houseplants"
   }),
   normalizePost({
     id: 14,
-    title: "Incredible NFT Collection",
-    category: "Featured",
-    categorySlug: "featured",
+    title: "Built-In Style: Bookshelf Styling Secrets",
+    category: "Storage",
+    categorySlug: "storage",
     author: "Ayesha Ali",
     authorSlug: "ayesha-ali",
-    date: "22 Feb 2020",
+    date: "06 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1634193295627-1cdddf751ebf?w=1600&h=1000&fit=crop&q=80",
-    slug: "incredible-nft-collection",
+    image: "https://images.unsplash.com/photo-1451153378752-16ef2b36ad05?w=1600&h=1000&fit=crop&q=80",
+    slug: "bookshelf-styling-secrets",
     large: true
   }),
   normalizePost({
     id: 15,
-    title: "Creative Web Developers Should Explore the NFT Niche",
-    category: "Featured",
-    categorySlug: "featured",
+    title: "Gallery Wall Layouts That Always Work",
+    category: "Wall Decor",
+    categorySlug: "wall-decor",
     author: "Diana Lewis",
     authorSlug: "diana-lewis",
-    date: "20 Feb 2020",
+    date: "05 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?w=1200&h=900&fit=crop&q=80",
-    slug: "creative-web-developers"
+    image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&h=900&fit=crop&q=80",
+    slug: "gallery-wall-layouts"
   }),
   normalizePost({
     id: 16,
-    title: "Trending Colors for Minting Unusual NFT Items",
-    category: "Featured",
-    categorySlug: "featured",
+    title: "Rugs 101: Size, Placement, and Texture",
+    category: "Textiles",
+    categorySlug: "textiles",
     author: "Sandra Jones",
     authorSlug: "sandra-jones",
-    date: "20 Jan 2020",
+    date: "03 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=1200&h=900&fit=crop&q=80",
-    slug: "trending-colors"
+    image: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?w=1200&h=900&fit=crop&q=80",
+    slug: "rugs-101"
   })
 ];
 
 export const recentPosts = [
   normalizePost({
     id: 17,
-    title: "Best Cartoon - NFT Transformations",
-    category: "Updates",
-    categorySlug: "updates",
+    title: "A Calm Morning Corner with Two Chairs",
+    category: "Living Room",
+    categorySlug: "living-room",
     author: "Ayesha Ali",
-    date: "27 Jan 2020",
+    date: "04 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1635405074683-96d6921a2a68?w=600&h=600&fit=crop&q=80",
-    slug: "best-cartoon-nft"
+    image: "https://images.unsplash.com/photo-1502005097973-6a7082348e28?w=600&h=600&fit=crop&q=80",
+    slug: "calm-morning-corner"
   }),
   normalizePost({
     id: 18,
-    title: "Technology Allows Modern Authors to Go Wild",
-    category: "Updates",
-    categorySlug: "updates",
+    title: "Small Balcony Makeover with Big Impact",
+    category: "Outdoor",
+    categorySlug: "outdoor",
     author: "Umar Aziz",
-    date: "22 Jan 2020",
+    date: "02 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=600&fit=crop&q=80",
-    slug: "technology-allows"
+    image: "https://images.unsplash.com/photo-1469796466635-455ede028aca?w=600&h=600&fit=crop&q=80",
+    slug: "small-balcony-makeover"
   }),
   normalizePost({
     id: 19,
-    title: "NFTs that Bring Aesthetic Pleasure to Viewers",
-    category: "Updates",
-    categorySlug: "updates",
+    title: "Kitchen Counter Styling: The 3-Item Rule",
+    category: "Kitchen",
+    categorySlug: "kitchen",
     author: "Ayesha Ali",
-    date: "22 Jan 2020",
+    date: "01 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=600&h=600&fit=crop&q=80",
-    slug: "aesthetic-pleasure"
+    image: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=600&h=600&fit=crop&q=80",
+    slug: "kitchen-counter-styling"
   })
 ];
 
 export const newsPosts = [
   normalizePost({
     id: 20,
-    title: "The Future of Digital Art",
+    title: "Neutral Kitchens Are Back—with Warm Wood",
     category: "News",
     categorySlug: "news",
     author: "Sandra Jones",
     authorSlug: "sandra-jones",
-    date: "20 Jan 2020",
+    date: "09 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1618556450991-2f1af64e8191?w=1200&h=800&fit=crop&q=80",
-    slug: "future-digital-art"
+    image: "https://images.unsplash.com/photo-1502673530728-f79b4cab31b1?w=1200&h=800&fit=crop&q=80",
+    slug: "neutral-kitchens-warm-wood"
   }),
   normalizePost({
     id: 21,
-    title: "New Approach to Design",
+    title: "Paint Finish Guide: Matte vs Eggshell",
     category: "News",
     categorySlug: "news",
     author: "Sandra Jones",
     authorSlug: "sandra-jones",
-    date: "20 Jan 2020",
+    date: "08 Feb 2026",
     comments: 4,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=800&fit=crop&q=80",
-    slug: "new-approach-design"
+    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&h=800&fit=crop&q=80",
+    slug: "paint-finish-guide"
   }),
   normalizePost({
     id: 22,
-    title: "Try Not Staring at It",
+    title: "Vintage Finds: Where to Start",
     category: "News",
     categorySlug: "news",
     author: "Umar Aziz",
     authorSlug: "umar-aziz",
-    date: "28 Jan 2020",
+    date: "07 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=1200&h=800&fit=crop&q=80",
-    slug: "try-not-staring"
+    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&h=800&fit=crop&q=80",
+    slug: "vintage-finds-start"
   }),
   normalizePost({
     id: 23,
-    title: "Ideas Can Make Money",
+    title: "Mirror Placement to Maximize Light",
     category: "News",
     categorySlug: "news",
     author: "Ayesha Ali",
     authorSlug: "ayesha-ali",
-    date: "01 Feb 2020",
+    date: "06 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=1200&h=800&fit=crop&q=80",
-    slug: "ideas-make-money"
+    image: "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&h=800&fit=crop&q=80",
+    slug: "mirror-placement-light"
   })
 ];
 
 export const latestPosts = [
   normalizePost({
     id: 24,
-    title: "Creating New NFT Apps for Authors and Sellers",
-    category: "Events",
-    categorySlug: "events",
+    title: "Weekend Project: Peel-and-Stick Backsplash",
+    category: "DIY",
+    categorySlug: "diy",
     author: "Diana Lewis",
     authorSlug: "diana-lewis",
-    date: "08 Mar 2020",
+    date: "11 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=800&fit=crop&q=80",
-    slug: "creating-nft-apps"
+    image: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&h=800&fit=crop&q=80",
+    slug: "peel-and-stick-backsplash"
   }),
   normalizePost({
     id: 25,
-    title: "Top Software for Creating Beautiful NFT Art",
-    category: "Events",
-    categorySlug: "events",
+    title: "Bathroom Spa Vibes with Simple Upgrades",
+    category: "Bathroom",
+    categorySlug: "bathroom",
     author: "Ayesha Ali",
     authorSlug: "ayesha-ali",
-    date: "19 Feb 2020",
+    date: "10 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&h=800&fit=crop&q=80",
-    slug: "top-software"
+    image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&h=800&fit=crop&q=80",
+    slug: "bathroom-spa-vibes"
   }),
   normalizePost({
     id: 26,
-    title: "Learn More About Blockchain Through NFTs",
-    category: "Events",
-    categorySlug: "events",
+    title: "Curtains That Make Ceilings Look Higher",
+    category: "Window Treatments",
+    categorySlug: "window-treatments",
     author: "Umar Aziz",
     authorSlug: "umar-aziz",
-    date: "27 Jan 2020",
+    date: "09 Feb 2026",
     comments: 0,
-    image: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=1200&h=800&fit=crop&q=80",
-    slug: "learn-blockchain"
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=800&fit=crop&q=80",
+    slug: "curtains-make-ceilings-higher"
   })
 ];
 
