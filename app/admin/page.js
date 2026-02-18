@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { allPosts } from '../data/posts';
 
@@ -123,6 +123,13 @@ export default function AdminPage() {
     featured: true
   });
 
+  const handleLogout = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+    setIsAuthed(false);
+  }, []);
+
   const calculateViews = () => {
     if (typeof window === 'undefined') return;
     const viewRaw = localStorage.getItem(VIEW_STORAGE_KEY);
@@ -238,7 +245,7 @@ export default function AdminPage() {
     }, remaining);
 
     return () => clearTimeout(timer);
-  }, [isAuthed]);
+  }, [isAuthed, handleLogout]);
 
   useEffect(() => {
     if (!authors.length) return;
@@ -340,13 +347,6 @@ export default function AdminPage() {
       return;
     }
     setLoginError('Invalid username or password.');
-  };
-
-  const handleLogout = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-    }
-    setIsAuthed(false);
   };
 
   const persistPosts = (posts) => {
@@ -939,6 +939,7 @@ export default function AdminPage() {
 
               <div className="mt-6 grid gap-6 lg:grid-cols-2">
                 <div className="group relative h-[320px] overflow-hidden rounded-2xl bg-slate-900">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={previewImage}
                     alt={previewTitle}
@@ -966,6 +967,7 @@ export default function AdminPage() {
                       key={card.id}
                       className="relative h-[150px] overflow-hidden rounded-2xl bg-slate-900"
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={FALLBACK_IMAGE}
                         alt={card.title}
@@ -1019,6 +1021,7 @@ export default function AdminPage() {
                       className="flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm"
                     >
                       <div className="h-20 w-24 overflow-hidden rounded-xl bg-slate-900">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={post.image || FALLBACK_IMAGE}
                           alt={post.title}
@@ -1105,6 +1108,7 @@ export default function AdminPage() {
                       className="flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm"
                     >
                       <div className="h-20 w-24 overflow-hidden rounded-xl bg-slate-900">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={post.image || FALLBACK_IMAGE}
                           alt={post.title}

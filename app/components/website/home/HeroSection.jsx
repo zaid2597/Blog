@@ -160,7 +160,7 @@ export default function HomePage() {
                 Search Results
               </h2>
               <p className="text-sm text-gray-500">
-                Showing results for "{searchQuery}" ({searchResults.length})
+                Showing results for &quot;{searchQuery}&quot; ({searchResults.length})
               </p>
             </div>
 
@@ -358,7 +358,7 @@ export default function HomePage() {
             {/* Editor's Choice Section */}
             <section>
               <div className="mb-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Editor's Choice</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Editor&apos;s Choice</h2>
                 <p className="text-sm text-gray-500">Articles of the Day</p>
               </div>
 

@@ -172,6 +172,7 @@ export default function AuthorsPage() {
               {previewImage ? (
                 <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-[#faf8f4] p-3">
                   <div className="h-12 w-12 overflow-hidden rounded-full bg-slate-200">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={previewImage} alt="Preview" className="h-full w-full object-cover" />
                   </div>
                   <p className="text-xs text-slate-500">Image preview</p>
@@ -215,6 +216,7 @@ export default function AuthorsPage() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-12 w-12 overflow-hidden rounded-full bg-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={author.image || FALLBACK_AVATAR}
                           alt={author.name}

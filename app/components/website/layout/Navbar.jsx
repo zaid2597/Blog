@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -27,7 +27,7 @@ const Navbar = () => {
     }
   };
 
-  const closeMenu = () => {
+  const closeMenu = useCallback(() => {
     if (isMobileMenuOpen) {
       setIsClosing(true);
       setTimeout(() => {
@@ -35,7 +35,7 @@ const Navbar = () => {
         setIsClosing(false);
       }, 300);
     }
-  };
+  }, [isMobileMenuOpen]);
 
   const toggleDropdown = (menu) => {
     setOpenDropdown(openDropdown === menu ? null : menu);
@@ -75,7 +75,7 @@ const Navbar = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, closeMenu]);
 
   useEffect(() => {
     const query = searchParams.get('q') || '';
@@ -97,7 +97,7 @@ const Navbar = () => {
     return () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, closeMenu]);
 
   return (
     <nav className="bg-white text-black sticky top-0 z-50 border-b border-black">
