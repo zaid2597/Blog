@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,6 +13,7 @@ const Navbar = () => {
   const menuRef = useRef(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const toggleMobileMenu = () => {
     if (isMobileMenuOpen) {
@@ -60,6 +61,25 @@ const Navbar = () => {
     router.push('/');
   };
 
+      const handleSectionNav = (sectionId) => (event) => {
+        if (pathname === '/') {
+          event.preventDefault();
+          closeMenu();
+          if (typeof window !== 'undefined') {
+            const element = document.getElementById(sectionId);
+            if (element) {
+              const offset = 88;
+              const top =
+                element.getBoundingClientRect().top + window.scrollY - offset;
+              window.scrollTo({ top, behavior: 'smooth' });
+              window.history.replaceState(null, '', `/#${sectionId}`);
+            }
+          }
+          return;
+        }
+        closeMenu();
+      };
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -106,7 +126,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="text-2xl font-black tracking-tight uppercase hover:opacity-80 transition-opacity duration-300">
-              DAILY DRIFT
+              ELDECORA
             </Link>
           </div>
 
@@ -199,201 +219,92 @@ const Navbar = () => {
           `}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {/* Home Link */}
+            {/* Our Studio Dropdown */}
+            <div className="mb-4">
+              <div className="w-full flex items-center justify-between text-lg font-semibold py-2">
+                <Link
+                  href="/"
+                  className="flex-1 hover:opacity-60 transition-all duration-300 transform hover:translate-x-1"
+                  onClick={closeMenu}
+                >
+                  Our Studio
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => toggleDropdown('studio')}
+                  className="ml-2 p-2 hover:opacity-60 transition-all duration-300"
+                  aria-label="Toggle Our Studio menu"
+                >
+                  <svg 
+                    className={`w-5 h-5 transition-all duration-300 ${openDropdown === 'studio' ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+              <div 
+                className={`
+                  overflow-hidden transition-all duration-300 ease-in-out
+                  ${openDropdown === 'studio' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
+                `}
+              >
+                <div className="pl-4 mt-2 space-y-2">
+                  <Link 
+                    href="/#featured-blogs" 
+                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
+                    onClick={handleSectionNav('featured-blogs')}
+                  >
+                    Featured Blogs
+                  </Link>
+                  <Link 
+                    href="/#latest-blogs" 
+                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
+                    onClick={handleSectionNav('latest-blogs')}
+                  >
+                    Latest Blogs
+                  </Link>
+                  <Link 
+                    href="/#trending-blogs" 
+                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
+                    onClick={handleSectionNav('trending-blogs')}
+                  >
+                    Trending Blogs
+                  </Link>
+                </div>
+              </div>
+            </div>
+
             <div className="mb-4">
               <Link
-                href="/"
+                href="/about"
                 className="block text-lg font-semibold hover:opacity-60 transition-all duration-300 py-2 transform hover:translate-x-1"
                 onClick={closeMenu}
               >
-                Home
+                About Us
               </Link>
             </div>
 
-            {/* Features Dropdown */}
             <div className="mb-4">
-              <button
-                onClick={() => toggleDropdown('features')}
-                className="w-full flex items-center justify-between text-lg font-semibold hover:opacity-60 transition-all duration-300 py-2 transform hover:translate-x-1"
+              <Link
+                href="/contact"
+                className="block text-lg font-semibold hover:opacity-60 transition-all duration-300 py-2 transform hover:translate-x-1"
+                onClick={closeMenu}
               >
-                Features
-                <svg 
-                  className={`w-5 h-5 transition-all duration-300 ${openDropdown === 'features' ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div 
-                className={`
-                  overflow-hidden transition-all duration-300 ease-in-out
-                  ${openDropdown === 'features' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
-                `}
-              >
-                <div className="pl-4 mt-2 space-y-2">
-                  <Link 
-                    href="/blog-band" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Blog
-                  </Link>
-                  <Link 
-                    href="/about-1" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    About 1
-                  </Link>
-                  <Link 
-                    href="/about-2" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    About 2
-                  </Link>
-                  <Link 
-                    href="/authors" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Authors
-                  </Link>
-                  <Link 
-                    href="/contacts" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Contacts
-                  </Link>
-                  <Link 
-                    href="/typography" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Typography
-                  </Link>
-                </div>
-              </div>
+                Contact Us
+              </Link>
             </div>
 
-            {/* Post Styles Dropdown */}
             <div className="mb-4">
-              <button
-                onClick={() => toggleDropdown('poststyles')}
-                className="w-full flex items-center justify-between text-lg font-semibold hover:opacity-60 transition-all duration-300 py-2 transform hover:translate-x-1"
+              <Link
+                href="/authors"
+                className="block text-lg font-semibold hover:opacity-60 transition-all duration-300 py-2 transform hover:translate-x-1"
+                onClick={closeMenu}
               >
-                Post styles
-                <svg 
-                  className={`w-5 h-5 transition-all duration-300 ${openDropdown === 'poststyles' ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div 
-                className={`
-                  overflow-hidden transition-all duration-300 ease-in-out
-                  ${openDropdown === 'poststyles' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
-                `}
-              >
-                <div className="pl-4 mt-2 space-y-2">
-                  <Link 
-                    href="/why-do-authors-refuse-to-sell-nfts" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Standard
-                  </Link>
-                  <Link 
-                    href="/digital-yin-yang-re-design" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Banner Ads
-                  </Link>
-                  <Link 
-                    href="/old-school-art-principles" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Review Post 1
-                  </Link>
-                  <Link 
-                    href="/fallout-76-has-our-future-ended" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Review Post 2
-                  </Link>
-                  <Link 
-                    href="/new-digital-nft-digest-2022" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Comments Off
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Shop Dropdown */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleDropdown('shop')}
-                className="w-full flex items-center justify-between text-lg font-semibold hover:opacity-60 transition-all duration-300 py-2 transform hover:translate-x-1"
-              >
-                Shop
-                <svg 
-                  className={`w-5 h-5 transition-all duration-300 ${openDropdown === 'shop' ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div 
-                className={`
-                  overflow-hidden transition-all duration-300 ease-in-out
-                  ${openDropdown === 'shop' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
-                `}
-              >
-                <div className="pl-4 mt-2 space-y-2">
-                  <Link 
-                    href="/shop" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Product Grid
-                  </Link>
-                  <Link 
-                    href="/product/buddah-figurine" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Product
-                  </Link>
-                  <Link 
-                    href="/cart" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Shopping Cart
-                  </Link>
-                  <Link 
-                    href="/checkout" 
-                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1" 
-                    onClick={closeMenu}
-                  >
-                    Checkout
-                  </Link>
-                </div>
-              </div>
+                Our Authors
+              </Link>
             </div>
           </div>
         </div>

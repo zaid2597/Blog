@@ -1,29 +1,41 @@
 const defaultAuthor = {
   name: "Ayesha Ali",
   slug: "ayesha-ali",
-  image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80"
+  image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80",
+  role: "Creative Director",
+  bio: "Ayesha leads Eldecora's studio vision, blending warm minimalism with layered, livable luxury."
 };
 
 const authorProfiles = {
   "Ayesha Ali": {
     slug: "ayesha-ali",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80"
+    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80",
+    role: "Creative Director",
+    bio: "Ayesha curates elevated, calm interiors with a focus on light, texture, and timeless materials."
   },
   "Sandra Jones": {
     slug: "sandra-jones",
-    image: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=200&h=200&fit=crop&q=80"
+    image: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=200&h=200&fit=crop&q=80",
+    role: "Senior Stylist",
+    bio: "Sandra brings refined styling and editorial polish, turning everyday rooms into design moments."
   },
   "Kylie Jones": {
     slug: "kylie-jones",
-    image: "https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?w=200&h=200&fit=crop&q=80"
+    image: "https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?w=200&h=200&fit=crop&q=80",
+    role: "Lighting & Spatial Designer",
+    bio: "Kylie specializes in lighting and spatial flow, creating rooms that feel open and intentional."
   },
   "Diana Lewis": {
     slug: "diana-lewis",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80"
+    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&q=80",
+    role: "Material Curator",
+    bio: "Diana focuses on tactile details and layered materials to elevate modern interiors."
   },
   "Umar Aziz": {
     slug: "umar-aziz",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&q=80"
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&q=80",
+    role: "Home Decor Specialist",
+    bio: "Umar blends modern comfort with classic craftsmanship, curating pieces that feel lived-in."
   }
 };
 
@@ -447,6 +459,35 @@ allPostsList.forEach((post) => {
 });
 
 export const allPosts = Array.from(postMap.values());
+
+const buildAuthorList = (posts) => {
+  const map = new Map();
+
+  posts.forEach((post) => {
+    const name = post.author || defaultAuthor.name;
+    const profile = authorProfiles[name] || defaultAuthor;
+    const author = {
+      name,
+      slug: profile.slug || slugify(name),
+      image: profile.image || defaultAuthor.image,
+      role: profile.role || defaultAuthor.role,
+      bio: profile.bio || defaultAuthor.bio
+    };
+
+    map.set(author.slug, author);
+  });
+
+  if (!map.has(defaultAuthor.slug)) {
+    map.set(defaultAuthor.slug, { ...defaultAuthor });
+  }
+
+  return Array.from(map.values());
+};
+
+export const authors = buildAuthorList(allPosts);
+
+export const getAuthorBySlug = (slug) =>
+  authors.find((author) => author.slug === slug);
 
 export const getPostBySlug = (slug) => {
   if (!slug) return undefined;

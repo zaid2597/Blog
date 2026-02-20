@@ -169,7 +169,7 @@ export default function BlogPost() {
 
         {/* Post Meta */}
         <div className="flex items-center gap-6 mb-8 pb-8 border-b border-gray-200">
-          <Link href={`/author/${post.authorSlug}`} className="flex items-center gap-3 group">
+          <Link href={`/authors/${post.authorSlug}`} className="flex items-center gap-3 group">
             <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200">
               <Image
                 src={authorImageSrc}
@@ -251,7 +251,7 @@ export default function BlogPost() {
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                <Link href={`/author/${post.authorSlug}`} className="hover:text-red-600 transition-colors">
+                <Link href={`/authors/${post.authorSlug}`} className="hover:text-red-600 transition-colors">
                   {post.author}
                 </Link>
               </h3>

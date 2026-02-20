@@ -24,7 +24,12 @@ const toSlug = (value) =>
 export default function AuthorsPage() {
   const [authors, setAuthors] = useState([]);
   const [statusMessage, setStatusMessage] = useState('');
-  const [form, setForm] = useState({ name: '', imageUrl: '' });
+  const [form, setForm] = useState({
+    name: '',
+    imageUrl: '',
+    role: '',
+    bio: ''
+  });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
 
@@ -83,14 +88,17 @@ export default function AuthorsPage() {
 
     const newAuthor = {
       id: `${toSlug(form.name)}-${Date.now()}`,
+      slug: toSlug(form.name),
       name: form.name.trim(),
-      image: imageFromFile || form.imageUrl || ''
+      image: imageFromFile || form.imageUrl || '',
+      role: form.role.trim(),
+      bio: form.bio.trim()
     };
 
     const updated = [newAuthor, ...authors];
     setAuthors(updated);
     persistAuthors(updated);
-    setForm({ name: '', imageUrl: '' });
+    setForm({ name: '', imageUrl: '', role: '', bio: '' });
     setImageFile(null);
     setStatusMessage('Author added.');
   };
@@ -156,6 +164,29 @@ export default function AuthorsPage() {
                     setForm((prev) => ({ ...prev, imageUrl: event.target.value }))
                   }
                   placeholder="https://..."
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
+                />
+              </label>
+              <label className="text-sm font-medium text-slate-700">
+                Role
+                <input
+                  value={form.role}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, role: event.target.value }))
+                  }
+                  placeholder="Senior Stylist"
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
+                />
+              </label>
+              <label className="text-sm font-medium text-slate-700">
+                Description
+                <textarea
+                  value={form.bio}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, bio: event.target.value }))
+                  }
+                  placeholder="Short bio about the author"
+                  rows={3}
                   className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
                 />
               </label>
