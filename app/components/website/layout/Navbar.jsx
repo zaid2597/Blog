@@ -273,6 +273,13 @@ const Navbar = () => {
                   >
                     Trending Blogs
                   </Link>
+                  <Link
+                    href="/#popular-blogs"
+                    className="block text-base hover:opacity-60 transition-all duration-300 py-1.5 transform hover:translate-x-1"
+                    onClick={handleSectionNav('popular-blogs')}
+                  >
+                    Popular Blogs
+                  </Link>
                 </div>
               </div>
             </div>
@@ -297,15 +304,6 @@ const Navbar = () => {
               </Link>
             </div>
 
-            <div className="mb-4">
-              <Link
-                href="/authors"
-                className="block text-lg font-semibold hover:opacity-60 transition-all duration-300 py-2 transform hover:translate-x-1"
-                onClick={closeMenu}
-              >
-                Our Authors
-              </Link>
-            </div>
           </div>
         </div>
       )}

@@ -26,11 +26,6 @@ const slugify = (value) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 
-const formatComments = (count) => {
-  const value = Number(count) || 0;
-  return `${value} Comment${value === 1 ? '' : 's'}`;
-};
-
 const normalizeAdminPost = (post) => {
   const title = post?.title || 'Untitled Card';
   const category = post?.category || 'General';
@@ -188,15 +183,6 @@ export default function HomePage() {
                     <h3 className="text-lg font-bold text-gray-900 mb-3 leading-tight group-hover:text-red-600 transition-colors">
                       {post.title}
                     </h3>
-                    <div className="flex items-center gap-3 text-sm text-gray-500">
-                      <span className="hover:text-gray-700 transition-colors">
-                        By {post.author}
-                      </span>
-                      <span>{post.date}</span>
-                      <span className="hover:text-gray-700 transition-colors">
-                        {formatComments(post.comments)}
-                      </span>
-                    </div>
                   </Link>
                 ))}
               </div>
@@ -235,15 +221,6 @@ export default function HomePage() {
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight">
                   {heroPostToUse.title}
                 </h2>
-                <div className="flex items-center gap-4 text-sm text-gray-300">
-                  <span className="hover:text-white transition-colors">
-                    By {heroPostToUse.author}
-                  </span>
-                  <span>{heroPostToUse.date}</span>
-                  <span className="hover:text-white transition-colors">
-                    {formatComments(heroPostToUse.comments)}
-                  </span>
-                </div>
               </div>
             </div>
           </Link>
@@ -269,15 +246,6 @@ export default function HomePage() {
                     <h3 className="text-xl font-bold text-white mb-2 leading-tight">
                       {post.title}
                     </h3>
-                    <div className="flex items-center gap-3 text-xs text-gray-300">
-                      <span className="hover:text-white transition-colors">
-                        By {post.author}
-                      </span>
-                    <span>{post.date}</span>
-                    <span className="hover:text-white transition-colors">
-                      {formatComments(post.comments)}
-                    </span>
-                    </div>
                   </div>
                 </div>
               </Link>
@@ -312,15 +280,6 @@ export default function HomePage() {
                 <h3 className="text-lg font-bold text-gray-900 mb-3 leading-tight group-hover:text-red-600 transition-colors">
                   {post.title}
                 </h3>
-                <div className="flex items-center gap-3 text-sm text-gray-500">
-                  <span className="hover:text-gray-700 transition-colors">
-                    By {post.author}
-                  </span>
-                  <span>{post.date}</span>
-                  <span className="hover:text-gray-700 transition-colors">
-                    {formatComments(post.comments)}
-                  </span>
-                </div>
               </Link>
             ))}
           </div>
@@ -355,11 +314,11 @@ export default function HomePage() {
           {/* Main Content - 2 columns */}
           <div className="lg:col-span-2 space-y-12">
             
-            {/* Editor's Choice Section */}
-            <section>
+            {/* Popular Blogs Section */}
+            <section id="popular-blogs" className="scroll-mt-24">
               <div className="mb-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Editor&apos;s Choice</h2>
-                <p className="text-sm text-gray-500">Articles of the Day</p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Popular Blogs</h2>
+                <p className="text-sm text-gray-500">Most loved reads</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -382,12 +341,6 @@ export default function HomePage() {
                     <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-red-600 transition-colors">
                       {post.title}
                     </h3>
-                    <div className="flex items-center gap-3 text-sm text-gray-500">
-                      <span>{post.date}</span>
-                      <span className="hover:text-gray-700 transition-colors">
-                        {formatComments(post.comments)}
-                      </span>
-                    </div>
                   </Link>
                 ))}
               </div>
@@ -417,12 +370,6 @@ export default function HomePage() {
                     <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-red-600 transition-colors">
                       {post.title}
                     </h3>
-                    <div className="flex items-center gap-3 text-sm text-gray-500">
-                      <span>{post.date}</span>
-                      <span className="hover:text-gray-700 transition-colors">
-                        {formatComments(post.comments)}
-                      </span>
-                    </div>
                   </Link>
                 ))}
               </div>
@@ -460,15 +407,6 @@ export default function HomePage() {
                           <h3 className="text-3xl font-bold text-white mb-3 leading-tight">
                             {post.title}
                           </h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-300">
-                            <span className="hover:text-white transition-colors">
-                              By {post.author}
-                            </span>
-                            <span>{post.date}</span>
-                            <span className="hover:text-white transition-colors">
-                              {formatComments(post.comments)}
-                            </span>
-                          </div>
                         </div>
                       )}
                     </div>
@@ -480,15 +418,6 @@ export default function HomePage() {
                         <h3 className="text-lg font-bold text-gray-900 mb-3 leading-tight group-hover:text-red-600 transition-colors">
                           {post.title}
                         </h3>
-                        <div className="flex items-center gap-3 text-sm text-gray-500">
-                          <span className="hover:text-gray-700 transition-colors">
-                            By {post.author}
-                          </span>
-                          <span>{post.date}</span>
-                          <span className="hover:text-gray-700 transition-colors">
-                            {formatComments(post.comments)}
-                          </span>
-                        </div>
                       </>
                     )}
                   </Link>
@@ -539,12 +468,6 @@ export default function HomePage() {
                       <h4 className="text-sm font-bold text-gray-900 mb-2 leading-tight group-hover:text-red-600 transition-colors">
                         {post.title}
                       </h4>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span>{post.date}</span>
-                        <span className="hover:text-gray-700 transition-colors">
-                          {formatComments(post.comments)}
-                        </span>
-                      </div>
                     </div>
                   </Link>
                 ))}
@@ -572,15 +495,6 @@ export default function HomePage() {
                     <h4 className="text-lg font-bold text-gray-900 mb-2 leading-tight group-hover:text-red-600 transition-colors">
                       {post.title}
                     </h4>
-                    <div className="flex items-center gap-3 text-sm text-gray-500">
-                      <span className="hover:text-gray-700 transition-colors">
-                        By {post.author}
-                      </span>
-                      <span>{post.date}</span>
-                      <span className="hover:text-gray-700 transition-colors">
-                        {formatComments(post.comments)}
-                      </span>
-                    </div>
                   </Link>
                 ))}
               </div>
@@ -588,24 +502,6 @@ export default function HomePage() {
 
           </aside>
         </div>
-
-        {/* Newsletter Section */}
-        <section className="mt-12 bg-gray-900 text-white p-8 text-center rounded-lg">
-          <h2 className="text-2xl font-bold mb-4">Get the best blog stories into your inbox!</h2>
-          <form className="max-w-md mx-auto flex gap-2">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-600 rounded"
-            />
-            <button
-              type="submit"
-              className="bg-red-600 text-white px-6 py-3 font-semibold uppercase tracking-wider hover:bg-red-700 transition-colors rounded"
-            >
-              Subscribe
-            </button>
-          </form>
-        </section>
 
           </>
         )}

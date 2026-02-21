@@ -1,4 +1,7 @@
+import { Suspense } from "react";
 import Navbar from "../components/website/layout/Navbar";
+import Footer from "../components/website/layout/Footer";
+import ContactForm from "../components/website/contact/ContactForm";
 
 export const metadata = {
   title: "Contact Us | Eldecora",
@@ -9,7 +12,9 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <>
-      <Navbar />
+      <Suspense fallback={null}>
+        <Navbar />
+      </Suspense>
       <main className="min-h-screen bg-[#f8f4ee] text-black">
         <section className="relative overflow-hidden border-b border-black/10">
           <div className="pointer-events-none absolute -top-28 -right-16 h-72 w-72 rounded-full bg-[#d7bfa8]/60 blur-3xl" />
@@ -42,7 +47,7 @@ export default function ContactPage() {
                   <p className="text-xs uppercase tracking-[0.3em] text-black/50">
                     Reach Us
                   </p>
-                  <p className="mt-2 text-sm font-semibold">hello@eldecorastudio.com</p>
+                  <p className="mt-2 text-sm font-semibold">eldecorastudio@gmail.com</p>
                   <p className="text-sm text-black/60">+92 300 123 4567</p>
                 </div>
               </div>
@@ -68,69 +73,7 @@ export default function ContactPage() {
                 <span className="text-xs text-black/50">We reply within 24–48h</span>
               </div>
 
-              <form className="mt-6 space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label className="text-xs uppercase tracking-[0.24em] text-black/60">
-                    Name
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Your full name"
-                      className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f4ee] px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/30"
-                    />
-                  </label>
-                  <label className="text-xs uppercase tracking-[0.24em] text-black/60">
-                    Email
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="you@email.com"
-                      className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f4ee] px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/30"
-                    />
-                  </label>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label className="text-xs uppercase tracking-[0.24em] text-black/60">
-                    Phone
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="+92 300 000 0000"
-                      className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f4ee] px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/30"
-                    />
-                  </label>
-                  <label className="text-xs uppercase tracking-[0.24em] text-black/60">
-                    Budget
-                    <select
-                      name="budget"
-                      className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f4ee] px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black/30"
-                    >
-                      <option>Under 50k</option>
-                      <option>50k – 150k</option>
-                      <option>150k – 300k</option>
-                      <option>300k+</option>
-                    </select>
-                  </label>
-                </div>
-
-                <label className="text-xs uppercase tracking-[0.24em] text-black/60">
-                  Tell us about your space
-                  <textarea
-                    name="message"
-                    rows="4"
-                    placeholder="Room size, style, timeline, and must-haves."
-                    className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f4ee] px-4 py-3 text-sm text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black/30"
-                  />
-                </label>
-
-                <button
-                  type="submit"
-                  className="w-full rounded-full bg-black px-6 py-3 text-xs font-semibold uppercase tracking-[0.4em] text-white transition hover:-translate-y-0.5 hover:shadow-lg"
-                >
-                  Send Request
-                </button>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </div>
@@ -166,6 +109,8 @@ export default function ContactPage() {
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
+

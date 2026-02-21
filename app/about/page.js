@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import Navbar from "../components/website/layout/Navbar";
 import Footer from "../components/website/layout/Footer";
 
@@ -50,7 +51,9 @@ const stats = [
 export default function AboutPage() {
   return (
     <>
-      <Navbar />
+      <Suspense fallback={null}>
+        <Navbar />
+      </Suspense>
       <main className="min-h-screen bg-[#f8f4ee] text-black">
         <section className="relative overflow-hidden border-b border-black/10">
           <div className="pointer-events-none absolute -top-24 -right-20 h-72 w-72 rounded-full bg-[#d7bfa8]/60 blur-3xl animate-[floatSlow_12s_ease-in-out_infinite]" />
@@ -144,14 +147,6 @@ export default function AboutPage() {
                 transform a house into a home. From the first mood board to the
                 final styling, we keep every decision intentional.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-full border border-black px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] transition hover:bg-black hover:text-white"
-                >
-                  Start a Project
-                </Link>
-              </div>
             </div>
 
             <div className="rounded-3xl border border-black/10 bg-white/90 p-6 md:p-8">

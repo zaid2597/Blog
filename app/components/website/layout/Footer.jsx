@@ -56,12 +56,6 @@ export default function Footer() {
                 >
                   Contact
                 </Link>
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center justify-center rounded-full border border-black/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-black/70 transition hover:border-black hover:text-black"
-                >
-                  Journal
-                </Link>
               </div>
             </div>
           </div>

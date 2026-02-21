@@ -96,6 +96,8 @@ export default function AdminPage() {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+  const [statusTone, setStatusTone] = useState('success');
+  const [imageUrlError, setImageUrlError] = useState('');
   const [adminPosts, setAdminPosts] = useState([]);
   const [authors, setAuthors] = useState(DEFAULT_AUTHORS);
   const [hiddenSiteCards, setHiddenSiteCards] = useState([]);
@@ -106,6 +108,7 @@ export default function AdminPage() {
   const [viewsLast7Days, setViewsLast7Days] = useState(0);
   const [editingId, setEditingId] = useState(null);
   const [editingSlug, setEditingSlug] = useState(null);
+  const [activeReviews, setActiveReviews] = useState([]);
   const [form, setForm] = useState({
     title: '',
     imageUrl: '',
@@ -113,7 +116,6 @@ export default function AdminPage() {
     category: CATEGORIES[0],
     tags: 'Design, UI, Feature',
     description: '',
-    excerpt: '',
     publishDate: getToday(),
     readTime: '5',
     comments: '0',
@@ -265,6 +267,25 @@ export default function AdminPage() {
     return () => URL.revokeObjectURL(objectUrl);
   }, [imageFile]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!editingSlug) {
+      setActiveReviews([]);
+      return;
+    }
+    const raw = localStorage.getItem(`reviews:${editingSlug}`);
+    if (!raw) {
+      setActiveReviews([]);
+      return;
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      setActiveReviews(Array.isArray(parsed) ? parsed : []);
+    } catch (error) {
+      setActiveReviews([]);
+    }
+  }, [editingSlug]);
+
   const tags = useMemo(
     () =>
       form.tags
@@ -332,6 +353,48 @@ export default function AdminPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const clearStatus = () => {
+    setStatusTone('success');
+    setStatusMessage('');
+  };
+
+  const setStatus = (tone, message) => {
+    setStatusTone(tone);
+    setStatusMessage(message);
+  };
+
+  const isValidImageUrl = (value) => {
+    if (!value) return true;
+    if (/^\d+$/.test(value)) return false;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const validatePublish = () => {
+    const missing = [];
+    if (!form.title.trim()) missing.push('Title');
+    if (!form.description.trim()) missing.push('Description');
+    if (!form.imageUrl.trim() && !imageFile) missing.push('Image');
+
+    if (missing.length) {
+      setImageUrlError('');
+      setStatus('error', `Please fill: ${missing.join(', ')}.`);
+      return false;
+    }
+
+    if (form.imageUrl.trim() && !isValidImageUrl(form.imageUrl)) {
+      setStatus('error', 'Please enter a valid image URL (http/https).');
+      setImageUrlError('Invalid URL');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleLogin = (event) => {
     event.preventDefault();
     setLoginError('');
@@ -368,7 +431,7 @@ export default function AdminPage() {
   };
 
   const buildPostPayload = async (statusOverride) => {
-    setStatusMessage('');
+    clearStatus();
     const selectedAuthor = authors.find((author) => author.name === form.author);
     const imageFromFile = imageFile
       ? await new Promise((resolve) => {
@@ -403,7 +466,6 @@ export default function AdminPage() {
       slug: editingSlug || slug,
       tags,
       description: form.description || '',
-      excerpt: form.excerpt || '',
       section: form.section || SECTION_OPTIONS[0].value,
       layout: form.layout,
       featured: form.featured,
@@ -413,34 +475,43 @@ export default function AdminPage() {
   };
 
   const handlePublish = async () => {
+    setImageUrlError('');
+    if (!validatePublish()) return;
     const newPost = await buildPostPayload('Published');
 
     if (typeof window !== 'undefined') {
       const updated = upsertPost(newPost);
       setAdminPosts(updated);
       persistPosts(updated);
-      setStatusMessage(
-        editingId ? 'Card updated and published.' : 'Card published and saved locally.'
+      setStatus(
+        'success',
+        editingId ? 'Card updated and published.' : 'Card published.'
       );
       setEditingId(null);
       setEditingSlug(null);
     } else {
-      setStatusMessage('Publish failed. Please try again in the browser.');
+      setStatus('error', 'Publish failed. Please try again in the browser.');
     }
   };
 
   const handleSaveDraft = async () => {
+    setImageUrlError('');
+    if (form.imageUrl.trim() && !isValidImageUrl(form.imageUrl)) {
+      setStatus('error', 'Please enter a valid image URL (http/https).');
+      setImageUrlError('Invalid URL');
+      return;
+    }
     const newPost = await buildPostPayload('Draft');
 
     if (typeof window !== 'undefined') {
       const updated = upsertPost(newPost);
       setAdminPosts(updated);
       persistPosts(updated);
-      setStatusMessage(editingId ? 'Draft updated.' : 'Draft saved.');
+      setStatus('success', editingId ? 'Draft updated.' : 'Draft saved.');
       setEditingId(null);
       setEditingSlug(null);
     } else {
-      setStatusMessage('Draft save failed. Please try again in the browser.');
+      setStatus('error', 'Draft save failed. Please try again in the browser.');
     }
   };
 
@@ -456,7 +527,6 @@ export default function AdminPage() {
       category: post.category || CATEGORIES[0],
       tags: Array.isArray(post.tags) ? post.tags.join(', ') : post.tags || '',
       description: post.description || '',
-      excerpt: post.excerpt || '',
       publishDate: toInputDate(post.date),
       readTime: post.readTime || '5',
       comments: String(post.comments ?? '0'),
@@ -465,7 +535,7 @@ export default function AdminPage() {
       layout: post.layout || LAYOUTS[0].id,
       featured: Boolean(post.featured)
     });
-    setStatusMessage('Draft loaded for editing.');
+    setStatus('success', 'Draft loaded for editing.');
     if (typeof document !== 'undefined') {
       document.getElementById('upload-card')?.scrollIntoView({ behavior: 'smooth' });
     }
@@ -483,7 +553,6 @@ export default function AdminPage() {
       category: post.category || CATEGORIES[0],
       tags: Array.isArray(post.tags) ? post.tags.join(', ') : post.tags || '',
       description: post.description || '',
-      excerpt: post.excerpt || '',
       publishDate: toInputDate(post.date),
       readTime: post.readTime || '5',
       comments: String(post.comments ?? '0'),
@@ -492,7 +561,7 @@ export default function AdminPage() {
       layout: post.layout || LAYOUTS[0].id,
       featured: Boolean(post.featured)
     });
-    setStatusMessage('Card loaded for editing.');
+    setStatus('success', 'Card loaded for editing.');
     if (typeof document !== 'undefined') {
       document.getElementById('upload-card')?.scrollIntoView({ behavior: 'smooth' });
     }
@@ -514,14 +583,14 @@ export default function AdminPage() {
     );
     setAdminPosts(updated);
     persistPosts(updated);
-    setStatusMessage('Draft published.');
+    setStatus('success', 'Draft published.');
   };
 
   const handleDelete = (postId) => {
     const updated = adminPosts.filter((post) => post.id !== postId);
     setAdminPosts(updated);
     persistPosts(updated);
-    setStatusMessage('Card deleted.');
+    setStatus('success', 'Card deleted.');
   };
 
   const handleDeleteCard = (post) => {
@@ -531,16 +600,23 @@ export default function AdminPage() {
       if (typeof window !== 'undefined') {
         localStorage.setItem(HIDDEN_SITE_STORAGE_KEY, JSON.stringify(updated));
       }
-      setStatusMessage('Website card hidden.');
+      setStatus('success', 'Website card hidden.');
       return;
     }
     handleDelete(post.id);
   };
 
+  const handleDeleteReview = (reviewId) => {
+    if (!editingSlug || typeof window === 'undefined') return;
+    const updated = activeReviews.filter((review) => review.id !== reviewId);
+    setActiveReviews(updated);
+    localStorage.setItem(`reviews:${editingSlug}`, JSON.stringify(updated));
+  };
+
   const handleClearAll = () => {
     setAdminPosts([]);
     persistPosts([]);
-    setStatusMessage('All cards removed.');
+    setStatus('success', 'All cards removed.');
   };
 
   const draftCards = useMemo(
@@ -677,12 +753,6 @@ export default function AdminPage() {
                 >
                   Review pending drafts
                 </a>
-                <Link
-                  href="/admin/authors"
-                  className="rounded-xl bg-[#f2efe8] px-4 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-[#e9e4da]"
-                >
-                  Manage authors
-                </Link>
               </div>
             </div>
           </section>
@@ -715,9 +785,81 @@ export default function AdminPage() {
                 </div>
               </div>
               {statusMessage ? (
-                <p className="mt-3 text-sm font-medium text-emerald-700">
+                <p
+                  className={`mt-3 text-sm font-medium ${
+                    statusTone === 'error' ? 'text-red-600' : 'text-emerald-700'
+                  }`}
+                >
                   {statusMessage}
                 </p>
+              ) : null}
+
+              {editingSlug ? (
+                <div className="mt-6 rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-base font-semibold text-slate-900">
+                        Card Reviews
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Selected card ke reviews yahan show honge.
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-[#f2efe8] px-3 py-1 text-xs font-semibold text-slate-600">
+                      {activeReviews.length} reviews
+                    </span>
+                  </div>
+
+                  {activeReviews.length === 0 ? (
+                    <div className="mt-4 rounded-2xl border border-dashed border-slate-200 bg-[#faf8f4] p-4 text-center text-sm text-slate-500">
+                      Abhi is card par koi review nahi hai.
+                    </div>
+                  ) : (
+                    <div className="mt-4 grid gap-3">
+                      {activeReviews.map((review) => (
+                        <div
+                          key={review.id}
+                          className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <p className="text-sm font-semibold text-slate-900">
+                              {review.name}
+                            </p>
+                            <div className="flex items-center gap-3">
+                              <span className="text-xs text-slate-500">
+                                {review.date}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteReview(review.id)}
+                                className="text-xs font-semibold text-red-600 hover:text-red-700"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                          {typeof review.rating === 'number' && review.rating > 0 ? (
+                            <div className="mt-2 flex items-center gap-1 text-red-600">
+                              {Array.from({ length: 5 }).map((_, index) => (
+                                <span
+                                key={`review-star-${review.id}-${index}`}
+                                className={
+                                  index < review.rating ? '' : 'text-slate-300'
+                                }
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                        <p className="mt-2 text-sm text-slate-700">
+                          {review.message}
+                        </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ) : null}
 
               <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -735,11 +877,19 @@ export default function AdminPage() {
                   <label className="text-sm font-medium text-slate-700">
                     Image URL
                     <input
+                      type="url"
                       value={form.imageUrl}
                       onChange={handleChange('imageUrl')}
                       placeholder="https://..."
-                      className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
+                      className={`mt-2 w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none ${
+                        imageUrlError ? 'border-red-400 focus:border-red-500' : 'border-slate-300 focus:border-slate-900'
+                      }`}
                     />
+                    {imageUrlError ? (
+                      <span className="mt-2 block text-xs text-red-600">
+                        Please enter a valid URL.
+                      </span>
+                    ) : null}
                   </label>
 
                   <label className="text-sm font-medium text-slate-700">
@@ -750,25 +900,6 @@ export default function AdminPage() {
                       onChange={(event) => setImageFile(event.target.files?.[0] || null)}
                       className="mt-2 w-full rounded-xl border border-dashed border-slate-300 bg-[#f8f6f1] px-4 py-3 text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white hover:border-slate-900"
                     />
-                  </label>
-
-                  <label className="text-sm font-medium text-slate-700">
-                    Author
-                    <select
-                      value={form.author}
-                      onChange={handleChange('author')}
-                      className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 focus:border-slate-900 focus:outline-none"
-                    >
-                      {authors.length ? (
-                        authors.map((author) => (
-                          <option key={author.id} value={author.name}>
-                            {author.name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="">No authors yet</option>
-                      )}
-                    </select>
                   </label>
 
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -837,17 +968,6 @@ export default function AdminPage() {
                     />
                   </label>
 
-                  <label className="text-sm font-medium text-slate-700">
-                    Excerpt
-                    <textarea
-                      rows={3}
-                      value={form.excerpt}
-                      onChange={handleChange('excerpt')}
-                      placeholder="Short excerpt for cards"
-                      className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
-                    />
-                  </label>
-
                   <div className="grid gap-4 sm:grid-cols-3">
                     <label className="text-sm font-medium text-slate-700">
                       Publish Date
@@ -904,21 +1024,6 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-slate-200 bg-[#faf8f4] p-4">
-                      <p className="text-sm font-medium text-slate-700">Visibility</p>
-                      <label className="mt-3 flex items-center justify-between text-sm text-slate-600">
-                        Featured card
-                        <input
-                          type="checkbox"
-                          checked={form.featured}
-                          onChange={handleChange('featured')}
-                          className="h-4 w-4"
-                        />
-                      </label>
-                      <div className="mt-3 text-xs text-slate-500">
-                        Slug: <span className="font-semibold text-slate-700">{slug}</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
